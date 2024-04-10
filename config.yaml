@@ -1,0 +1,16 @@
+# A盘
+fromPaths:
+  - /Users/evan/project/chiaMove/A1
+  - /Users/evan/project/chiaMove/A2
+  - /Users/evan/project/chiaMove/A3
+# B盘
+toPaths:
+  - /Users/evan/project/chiaMove/B1
+  - /Users/evan/project/chiaMove/B2
+  - /Users/evan/project/chiaMove/B3
+  - /Users/evan/project/chiaMove/B4
+  - /Users/evan/project/chiaMove/B5
+fromPathFilter:
+  minSize: 100  # 子文件的最小尺寸：单位B
+  maxSize: 1006632966 # 子文件的最大尺寸：单位B
+  prefix: 'post_'
