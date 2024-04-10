@@ -3,12 +3,12 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/otiai10/copy"
 	"github.com/thoas/go-funk"
 	"golang.org/x/sys/unix"
 	yaml "gopkg.in/yaml.v2"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -95,35 +95,31 @@ func getCanMovePath(fromPath string) (string, error) {
 }
 
 func CopySourceToDestination(src, dst string) error {
-	srcBase := filepath.Base(src)
-	dstPath := filepath.Join(dst, srcBase)
-
-	// 检查源目录是否存在
 	if _, err := os.Stat(src); os.IsNotExist(err) {
-		return fmt.Errorf("源目录不存在")
+		return fmt.Errorf("源目录不存在: %w", err)
 	}
+	// 使用rsync命令进行复制，支持断点续传
+	// --partial 使得rsync在单个文件传输被中断时保留部分文件，以便续传
+	// --append 使用文件已传输的部分，无需重新传输
+	cmd := exec.Command("rsync", "-avz", "--partial", "--append", "--remove-source-files", src, dst)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
-	// 检查目标目录下是否已存在与源目录同名的目录
-	if _, err := os.Stat(dstPath); !os.IsNotExist(err) {
-		return fmt.Errorf("目标目录下已存在同名目录，请手动处理")
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("rsync命令执行出错: %w", err)
 	}
-
-	// 开始复制
-	err := copy.Copy(src, dstPath)
-	if err != nil {
-		// 如果复制过程中出现错误，删除已复制的部分
-		os.RemoveAll(dstPath)
-		return err
+	if err := os.RemoveAll(src); err != nil {
+		return fmt.Errorf("删除源目录出错: %w", err)
 	}
-
-	// 复制成功，删除源目录
-	return os.RemoveAll(src)
+	return nil
 }
 
 func afterHook() {
-	fmt.Println("有问题的文件夹如下：")
-	for _, path := range invalidPath {
-		fmt.Println(path)
+	if len(invalidPath) > 0 {
+		fmt.Println("有问题的文件夹如下：")
+		for _, path := range invalidPath {
+			fmt.Println(path)
+		}
 	}
 }
 

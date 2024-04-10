@@ -1,16 +1,18 @@
 # A盘
 fromPaths:
-  - /Users/evan/project/chiaMove/A1
-  - /Users/evan/project/chiaMove/A2
-  - /Users/evan/project/chiaMove/A3
+  - /Users/evan/project/chiaMove/tmp/A1
+  - /Users/evan/project/chiaMove/tmp/A2
+  - /Users/evan/project/chiaMove/tmp/A3
 # B盘
 toPaths:
-  - /Users/evan/project/chiaMove/B1
-  - /Users/evan/project/chiaMove/B2
-  - /Users/evan/project/chiaMove/B3
-  - /Users/evan/project/chiaMove/B4
-  - /Users/evan/project/chiaMove/B5
+  - /Users/evan/project/chiaMove/tmp/B1
+  - /Users/evan/project/chiaMove/tmp/B2
+  - /Users/evan/project/chiaMove/tmp/B3
+  - /Users/evan/project/chiaMove/tmp/B4
+  - /Users/evan/project/chiaMove/tmp/B5
 fromPathFilter:
-  minSize: 100  # 子文件的最小尺寸：单位B
-  maxSize: 1006632966 # 子文件的最大尺寸：单位B
+#  minSize: 1030792151450
+#  maxSize: 1030792151451
+  minSize: 1
+  maxSize: 1030792151451
   prefix: 'post_'
